@@ -1,0 +1,25 @@
+{
+    "name": "azonmedia/psr-to-swoole",
+    "type": "utility",
+    "description": "Utilities to convert between Swoole and PSR request and response",
+    "keywords": ["utility","psr","swoole"],
+    "homepage": "https://github.com/AzonMedia/swoole-to-psr",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Vesko Kenashkov",
+            "email": "kenashkov@azonmedia.com",
+            "homepage": "http://azonmedia.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.0",
+        "psr/http-message": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Azonmedia\\PsrToSwoole\\": "src/"
+        }
+    }
+}

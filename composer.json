@@ -3,7 +3,7 @@
     "type": "utility",
     "description": "Utilities to convert between Swoole and PSR request and response",
     "keywords": ["utility","psr","swoole"],
-    "homepage": "https://github.com/AzonMedia/swoole-to-psr",
+    "homepage": "https://github.com/AzonMedia/psr-to-swoole",
     "license": "BSD-3-Clause",
     "authors": [
         {

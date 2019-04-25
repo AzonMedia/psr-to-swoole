@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace Azonmedia\SwooleToPsr;
+namespace Azonmedia\PsrToSwoole;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

@@ -19,32 +19,37 @@ class PsrToSwoole
      * @param \Swoole\Http\Request|null $swoole_request
      * @return \Swoole\Http\Request
      */
-    public static function ConvertRequest(RequestInterface $psr_request, ?\Swoole\Http\Request $swoole_request = NULL) : \Swoole\Http\Request
+    public static function ConvertRequest(RequestInterface $PsrRequest, ?\Swoole\Http\Request $SwooleResponse = NULL) : \Swoole\Http\Request
     {
 
     }
 
     /**
-     * @param ResponseInterface $psr_response
-     * @param \Swoole\Http\Request|null $swoole_response
+     * @param ResponseInterface $PsrRequest
+     * @param \Swoole\Http\Request|null $SwooleResponse
      * @return \Swoole\Http\Request
      */
-    public static function ConvertResponse(ResponseInterface $psr_response, ?\Swoole\Http\Response $swoole_response = NULL) : \Swoole\Http\Response
+    public static function ConvertResponse(ResponseInterface $PsrRequest, ?\Swoole\Http\Response $SwooleResponse = NULL) : \Swoole\Http\Response
     {
 
-        if (!$swoole_response) {
-            $swoole_response = new \Swoole\Http\Response();
+        if (!$SwooleResponse) {
+            $SwooleResponse = new \Swoole\Http\Response();
         }
 
-        $headers = $psr_response->getHeaders();
+        $SwooleResponse->status($PsrRequest->getStatusCode());
+
+        $headers = $PsrRequest->getHeaders();
         foreach ($headers as $header_name => $header_value) {
-            $swoole_response->header($header_name, $header_value);
+            $SwooleResponse->header($header_name, $header_value);
         }
 
-        $body = $psr_response->getBody();
-        $output = (string) $body;
-        $swoole_response->write($output);
+        $Body = $PsrRequest->getBody();
+        $output = (string) $Body;
+        if (!$output) {
+            $output = $PsrRequest->getReasonPhrase();
+        }
+        $SwooleResponse->write($output);
 
-        return $swoole_response;
+        return $SwooleResponse;
     }
 }

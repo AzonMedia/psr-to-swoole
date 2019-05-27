@@ -39,8 +39,14 @@ class PsrToSwoole
         $SwooleResponse->status($PsrRequest->getStatusCode());
 
         $headers = $PsrRequest->getHeaders();
-        foreach ($headers as $header_name => $header_value) {
-            $SwooleResponse->header($header_name, $header_value);
+        foreach ($headers as $header_name => $header_arr) {
+            if (!is_array($header_arr)) {
+                $header_arr = [$header_arr];
+            }
+
+            foreach ($header_arr as $header_value) {
+                $SwooleResponse->header($header_name, $header_value);
+            }
         }
 
         $Body = $PsrRequest->getBody();

@@ -6,6 +6,8 @@ namespace Azonmedia\PsrToSwoole;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Swoole\Http\Request as SwooleRequest;
+use Swoole\Http\Response as SwooleResponse;
 
 /**
  * Class PsrToSwoole
@@ -15,30 +17,33 @@ class PsrToSwoole
 {
 
     /**
-     * @param RequestInterface $psr_request
-     * @param \Swoole\Http\Request|null $swoole_request
-     * @return \Swoole\Http\Request
+     * @param RequestInterface $PsrRequest
+     * @param SwooleRequest|null $SwooleRequest
+     * @return SwooleRequest
      */
-    public static function ConvertRequest(RequestInterface $PsrRequest, ?\Swoole\Http\Request $SwooleResponse = NULL) : \Swoole\Http\Request
+    public static function ConvertRequest(RequestInterface $PsrRequest, ?SwooleRequest $SwooleRequest = NULL) : SwooleRequest
     {
 
+        return $SwooleRequest;
     }
 
     /**
-     * @param ResponseInterface $PsrRequest
-     * @param \Swoole\Http\Request|null $SwooleResponse
-     * @return \Swoole\Http\Request
+     * Converts a PSR-7 Response to a Swoole Server Response
+     *
+     * @param ResponseInterface $PsrResponse
+     * @param SwooleResponse|null $SwooleResponse
+     * @return SwooleResponse
      */
-    public static function ConvertResponse(ResponseInterface $PsrRequest, ?\Swoole\Http\Response $SwooleResponse = NULL) : \Swoole\Http\Response
+    public static function ConvertResponse(ResponseInterface $PsrResponse, ?SwooleResponse $SwooleResponse = NULL) : SwooleResponse
     {
 
         if (!$SwooleResponse) {
-            $SwooleResponse = new \Swoole\Http\Response();
+            $SwooleResponse = new SwooleResponse();
         }
 
-        $SwooleResponse->status($PsrRequest->getStatusCode());
+        $SwooleResponse->status($PsrResponse->getStatusCode());
 
-        $headers = $PsrRequest->getHeaders();
+        $headers = $PsrResponse->getHeaders();
         foreach ($headers as $header_name => $header_arr) {
             if (!is_array($header_arr)) {
                 $header_arr = [$header_arr];
@@ -49,10 +54,10 @@ class PsrToSwoole
             }
         }
 
-        $Body = $PsrRequest->getBody();
+        $Body = $PsrResponse->getBody();
         $output = (string) $Body;
         if (!$output) {
-            $output = $PsrRequest->getReasonPhrase();
+            $output = $PsrResponse->getReasonPhrase();
         }
         $SwooleResponse->write($output);
 

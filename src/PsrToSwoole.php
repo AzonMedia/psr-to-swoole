@@ -26,6 +26,7 @@ class PsrToSwoole
         return $SwooleRequest;
     }
 
+    //TODO - add support for streaming content
     /**
      * Converts a PSR-7 Response to a Swoole Server Response
      *
@@ -58,7 +59,8 @@ class PsrToSwoole
         if (!$output) {
             $output = $PsrResponse->getReasonPhrase();
         }
-        $SwooleResponse->write($output);
+        //$SwooleResponse->write($output);//this is chunked - testing with apache ab with -k flag for example will hang (as it doesnt support chunked)
+        $SwooleResponse->end($output);
 
         return $SwooleResponse;
     }

@@ -59,8 +59,9 @@ class PsrToSwoole
         if (!$output) {
             $output = $PsrResponse->getReasonPhrase();
         }
-        //$SwooleResponse->write($output);//this is chunked - testing with apache ab with -k flag for example will hang (as it doesnt support chunked)
-        $SwooleResponse->end($output);
+        $SwooleResponse->write($output);//this is chunked - testing with apache ab with -k flag for example will hang (as it doesnt support chunked)
+        //end() will be sent in the code invoking this method
+        //$SwooleResponse->end($output);//let the caller determine when the send the response
 
         return $SwooleResponse;
     }

@@ -34,7 +34,7 @@ class PsrToSwoole
      * @param SwooleResponse|null $SwooleResponse
      * @return SwooleResponse
      */
-    public static function ConvertResponse(ResponseInterface $PsrResponse, ?SwooleResponse $SwooleResponse = NULL) : SwooleResponse
+    public static function ConvertResponse(ResponseInterface $PsrResponse, ?SwooleResponse $SwooleResponse = NULL, bool $chunked = false) : SwooleResponse
     {
 
         if (!$SwooleResponse) {
@@ -44,6 +44,7 @@ class PsrToSwoole
         $SwooleResponse->status($PsrResponse->getStatusCode());
 
         $headers = $PsrResponse->getHeaders();
+
         foreach ($headers as $header_name => $header_arr) {
             if (!is_array($header_arr)) {
                 $header_arr = [$header_arr];
@@ -59,9 +60,15 @@ class PsrToSwoole
         if (!$output) {
             $output = $PsrResponse->getReasonPhrase();
         }
-        $SwooleResponse->write($output);//this is chunked - testing with apache ab with -k flag for example will hang (as it doesnt support chunked)
+        //$SwooleResponse->write($output);//this is chunked - testing with apache ab with -k flag for example will hang (as it doesnt support chunked)
         //end() will be sent in the code invoking this method
         //$SwooleResponse->end($output);//let the caller determine when the send the response
+        if ($chunked) {
+            $SwooleResponse->write($output);
+        } else {
+            $SwooleResponse->end($output);
+        }
+        //$SwooleResponse->write($output);
 
         return $SwooleResponse;
     }
